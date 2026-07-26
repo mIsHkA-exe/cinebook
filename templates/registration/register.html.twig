@@ -1,0 +1,219 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription - CineBook{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel='stylesheet' href='{{ asset('css/register.css') }}'>
+{% endblock %}
+
+{% block body %}
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+		<div class="container-fluid">
+			<div class='navbar-logo-container'>
+				<a class="navbar-brand" href="{{ path("app_home") }}">
+					<img src='{{ asset('images/logo_monprojet-V2.png') }}' class='navbar-logo'>
+				</a>
+			</div>
+			<div class="collapse navbar-collapse" id="navbarNavDropdown">
+				<ul class="navbar-nav">
+					<li class="nav-item">
+						<a class="nav-link" href="{{ path('app_home') }}">Films</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+    <!-- CONTENU PRINCIPAL -->
+    <div class="register-container">
+        <div class="register-content">
+            
+            <!-- COLONNE GAUCHE - MESSAGE -->
+            <div class="register-left">
+                <div style="font-size: 80px; text-align: center; margin-bottom: 24px;">🎭</div>
+                <h1 class="register-title">Rejoignez CineBook</h1>
+                <p class="register-subtitle">
+                    Créez votre compte pour réserver vos places de cinéma et accéder à toutes nos fonctionnalités.
+                </p>
+                
+                <div class="register-benefits">
+                    <div class="benefit-item">
+                        <span class="benefit-icon">✓</span>
+                        <div>
+                            <p class="benefit-title">Réservations faciles</p>
+                            <p class="benefit-text">Réservez en quelques clics</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <span class="benefit-icon">✓</span>
+                        <div>
+                            <p class="benefit-title">Suivi d'ordres</p>
+                            <p class="benefit-text">Gérez vos réservations</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <span class="benefit-icon">✓</span>
+                        <div>
+                            <p class="benefit-title">Offres exclusives</p>
+                            <p class="benefit-text">Accès à des promotions</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COLONNE DROITE - FORMULAIRE -->
+            <div class="register-right">
+                <div class="register-form-card">
+                    <h2 class="form-title">Créer un compte</h2>
+                    <p class="form-subtitle">Inscrivez-vous pour commencer</p>
+
+                    <!-- Erreurs flash -->
+                    {% for flash_error in app.flashes('verify_email_error') %}
+                        <div class="alert alert-error">
+                            <span class="alert-icon">⚠️</span>
+                            {{ flash_error }}
+                        </div>
+                    {% endfor %}
+
+                    <!-- Erreurs du formulaire -->
+                    {% if registrationForm.vars.errors|length > 0 %}
+                        <div class="alert alert-error">
+                            <span class="alert-icon">⚠️</span>
+                            {{ form_errors(registrationForm) }}
+                        </div>
+                    {% endif %}
+
+                    <!-- FORMULAIRE -->
+                    {{ form_start(registrationForm, {
+                        attr: {
+                            class: 'registration-form',
+                            novalidate: 'novalidate'
+                        }
+                    }) }}
+
+                        <!-- Email -->
+                        <div class="form-group">
+                            {{ form_label(registrationForm.email, 'Adresse email', {label_attr: {class: 'form-label'}}) }}
+                            {{ form_widget(registrationForm.email, {
+                                attr: {
+                                    class: 'form-input',
+                                    placeholder: 'vous@example.com'
+                                }
+                            }) }}
+                            {% if registrationForm.email.vars.errors|length > 0 %}
+                                <span class="form-error">
+                                    {{ form_errors(registrationForm.email) }}
+                                </span>
+                            {% endif %}
+                        </div>
+
+                        <!-- Mot de passe -->
+                        <div class="form-group">
+                            {{ form_label(registrationForm.plainPassword, 'Mot de passe', {label_attr: {class: 'form-label'}}) }}
+                            {{ form_widget(registrationForm.plainPassword, {
+                                attr: {
+                                    class: 'form-input',
+                                    placeholder: 'Entrez un mot de passe sécurisé'
+                                }
+                            }) }}
+                            <small class="form-help">Minimum 8 caractères, avec chiffres et caractères spéciaux</small>
+                            {% if registrationForm.plainPassword.vars.errors|length > 0 %}
+                                <span class="form-error">
+                                    {{ form_errors(registrationForm.plainPassword) }}
+                                </span>
+                            {% endif %}
+                        </div>
+
+                        <!-- Conditions d'utilisation -->
+                        <div class="form-checkbox">
+                            {{ form_widget(registrationForm.agreeTerms, {
+                                attr: {
+                                    class: 'checkbox-input'
+                                }
+                            }) }}
+                            {{ form_label(registrationForm.agreeTerms, 'J\'accepte les conditions d\'utilisation', {label_attr: {class: 'checkbox-label'}}) }}
+                            {% if registrationForm.agreeTerms.vars.errors|length > 0 %}
+                                <span class="form-error">
+                                    {{ form_errors(registrationForm.agreeTerms) }}
+                                </span>
+                            {% endif %}
+                        </div>
+
+                        <!-- Bouton inscription -->
+                        <button type="submit" class="btn btn-register">S'inscrire</button>
+
+                    {{ form_end(registrationForm) }}
+
+                    <!-- Lien vers login -->
+                    <div class="register-login-link">
+                        <p>
+                            Déjà inscrit ? 
+                            <a href="{{ path('app_login') }}">Se connecter</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 class="footer-logo">
+                        <span class="footer-icon">🎬</span>
+                        CineBook
+                    </h3>
+                    <p class="footer-description">
+                        Réservez vos places de cinéma en ligne. Découvrez les meilleurs films et profitez d'une expérience de réservation simple et rapide.
+                    </p>
+                </div>
+
+                <div class="footer-section">
+                    <h4 class="footer-title">Liens rapides</h4>
+                    <ul class="footer-list">
+                        <li><a href="{{ path('app_home') }}">Accueil</a></li>
+                        <li><a href="#">Films</a></li>
+                        <li><a href="#">À propos</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4 class="footer-title">Support</h4>
+                    <ul class="footer-list">
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Aide</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4 class="footer-title">Nous suivre</h4>
+                    <div class="footer-social">
+                        <a href="#" class="social-icon" title="Facebook">f</a>
+                        <a href="#" class="social-icon" title="Instagram">📷</a>
+                        <a href="#" class="social-icon" title="GitHub">⚙️</a>
+                        <a href="#" class="social-icon" title="Discord">💬</a>
+                    </div>
+                    <p class="footer-social-text">GitHub • Instagram • Discord</p>
+                </div>
+            </div>
+
+            <div class="footer-divider"></div>
+
+            <div class="footer-bottom">
+                <p class="footer-copyright">
+                    &copy; 2024 CineBook. Tous droits réservés.
+                </p>
+                <div class="footer-legal">
+                    <a href="#">CGU</a>
+                    <a href="#">Confidentialité</a>
+                    <a href="#">Cookies</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+{% endblock %}

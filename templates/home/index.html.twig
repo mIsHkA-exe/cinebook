@@ -1,0 +1,254 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello HomeController!{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel='stylesheet' href='{{ asset('css/home.css') }}'>
+{% endblock %}
+
+{% block body %}
+	<nav class="navbar navbar-expand-lg bg-body-tertiary">
+		<div class="container-fluid">
+			<div class='navbar-logo-container'>
+				<a class="navbar-brand" href="{{ path("app_home") }}">
+					<img src='{{ asset('images/logo_monprojet-V2.png') }}' class='navbar-logo'>
+				</a>
+			</div>
+			<div class="collapse navbar-collapse" id="navbarNavDropdown">
+				<ul class="navbar-nav">
+					<li class="nav-item">
+						<a class="nav-link" href="#movies">Films</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">Bookings</a>
+					</li>
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+							Options
+						</a>
+						<ul class="dropdown-menu">
+							<li><a class="dropdown-item" href="#">Action</a></li>
+							<li><a class="dropdown-item" href="#">Another action</a></li>
+							<li><a class="dropdown-item" href="#">Something else here</a></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+			<button type="button" class="btn btn-primary">Sign In</button>
+		</div>
+	</nav>
+
+	<section class='hero-section'>
+		<div class='hero-div'>
+			<h2 class='hero-h2'>Book your next movie in just few seconds</h2>
+			<p class='hero-p'>Discover and book the best films from around the world.</p>
+			<a href='#tuto'>
+				<button type="button" class="btn btn-primary">How it works ?</button>
+			</a>
+		</div>
+	</section>
+
+	<section class='movie-container-section' id='movies'>
+		<div class='text+filter-container'>
+			<div class='text-container'>
+				<h2 class='mc-h2'>Get Started</h2>
+				<p class='mc-p'>Selection of the best upcoming films</p>
+			</div>
+			<div class='filter-btn-container'>
+				<button type="button" class="btn btn-secondary">All</button>
+				<button type="button" class="btn btn-secondary">Action</button>
+				<button type="button" class="btn btn-secondary">Comedy</button>
+				<button type="button" class="btn btn-secondary">Drama</button>
+			</div>
+		</div>
+
+		{% if app.user %}
+			{% if movies %}
+				<div class='movies-list'>
+					{% for movie in movies %}
+						<div class='movies-card'>
+							<button class='card-id' onclick="openModal('{{ movie.title }}', '{{ movie.type }}', {{ movie.duration }}, '{{ movie.details }}','https://www.youtube.com/embed/jNQXAC9IVRw')">
+								<div class="card">
+									<img src="https://imgs.search.brave.com/Ae0Z7LonyvRNMAeT0Ueq03PA2mdeX_Js-YjH7Qj3tY0/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/dmVjdGV1cnMtbGli/cmUvcHJvZHVjdGlv/bi1maWxtcy1jaW5l/bWF0b2dyYXBoaXF1/ZXMtY29tcG9zaXRp/b24tdHJhbnNwYXJl/bnRlLXJlYWxpc3Rl/LWltYWdlLWlzb2xl/ZS1iYXR0YW50LWls/bHVzdHJhdGlvbi12/ZWN0b3JpZWxsZS1j/aGFtcHMtdmlkZXNf/MTI4NC02NjE2My5q/cGc_c2VtdD1haXNf/aHlicmlkJnc9NzQw/JnE9ODA" class="card-img-top" alt="{{ movie.title }}">
+									<div class="card-body">
+										<h3>{{ movie.title }}</h3>
+										<p class="card-text">{{ movie.details }}</p>
+									</div>
+								</div>
+							</button>
+						</div>
+					{% endfor %}
+				</div>
+
+				{# Modal #}
+				<div class="modal" id="movieModal">
+					<div class="modal-overlay" onclick="closeModal()"></div>
+					<div class="modal-content">
+						<button class="modal-close" onclick="closeModal()">✕</button>
+						<div class="modal-body">
+							<div class="modal-video">
+								<iframe id="movieVideo" width="100%" height="100%" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+							</div>
+							<div class="modal-info">
+								<h2 id="movieTitle"></h2>
+								<p class="modal-genre"><span id="movieType"></span> • <span id="movieDuration"></span> min</p>
+								<p class="modal-rating">⭐</p>
+								<div class="modal-description">
+									<h3>Synopsis</h3>
+									<p id="movieDescription"></p>
+								</div>
+								<a href='{{ path('app_booking') }}'>
+									<button class="btn btn-primary">Book now</button>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			{% else %}
+				<p>No movie found sorry</p>
+			{% endif %}
+			{% else %}
+			<p>Veillez vous connecter ou créer un compte pour accéder à la liste de film</p>
+		{% endif %}
+	</section>
+
+	<!-- TUTOS SECTION -->
+	<section class='tutos-container' id='tuto'>
+		<h2 class='h2-section' style='color : white; text-align : center'>How to get the flow</h2>
+		<div class='tuto-container'>
+			<div class='login-tuto'>
+				<img class='img-login-tuto' src="https://imgs.search.brave.com/Ae0Z7LonyvRNMAeT0Ueq03PA2mdeX_Js-YjH7Qj3tY0/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/dmVjdGV1cnMtbGli/cmUvcHJvZHVjdGlv/bi1maWxtcy1jaW5l/bWF0b2dyYXBoaXF1/ZXMtY29tcG9zaXRp/b24tdHJhbnNwYXJl/bnRlLXJlYWxpc3Rl/LWltYWdlLWlzb2xl/ZS1iYXR0YW50LWls/bHVzdHJhdGlvbi12/ZWN0b3JpZWxsZS1j/aGFtcHMtdmlkZXNf/MTI4NC02NjE2My5q/cGc_c2VtdD1haXNf/aHlicmlkJnc9NzQw/JnE9ODA" alt='logo'>
+				<h4 class='h4-login-tuto'>Se Connecter</h4>
+				<p class='text-login-tuto'>Créez votre compte en quelques secondes</p>
+			</div>
+			<div class='booking-tuto'>
+				<img class='img-booking-tuto' src="https://imgs.search.brave.com/Ae0Z7LonyvRNMAeT0Ueq03PA2mdeX_Js-YjH7Qj3tY0/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/dmVjdGV1cnMtbGli/cmUvcHJvZHVjdGlv/bi1maWxtcy1jaW5l/bWF0b2dyYXBoaXF1/ZXMtY29tcG9zaXRp/b24tdHJhbnNwYXJl/bnRlLXJlYWxpc3Rl/LWltYWdlLWlzb2xl/ZS1iYXR0YW50LWls/bHVzdHJhdGlvbi12/ZWN0b3JpZWxsZS1j/aGFtcHMtdmlkZXNf/MTI4NC02NjE2My5q/cGc_c2VtdD1haXNf/aHlicmlkJnc9NzQw/JnE9ODA" alt='logo'>
+				<h4 class='h4-booking-tuto'>Réserver</h4>
+				<p class='text-bookng-tuto'>Trouvez et réservez vos films préférés</p>
+			</div>
+			<div class='enjoy-tuto'>
+				<img class='img-enjoy-tuto' src="https://imgs.search.brave.com/Ae0Z7LonyvRNMAeT0Ueq03PA2mdeX_Js-YjH7Qj3tY0/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/dmVjdGV1cnMtbGli/cmUvcHJvZHVjdGlv/bi1maWxtcy1jaW5l/bWF0b2dyYXBoaXF1/ZXMtY29tcG9zaXRp/b24tdHJhbnNwYXJl/bnRlLXJlYWxpc3Rl/LWltYWdlLWlzb2xl/ZS1iYXR0YW50LWls/bHVzdHJhdGlvbi12/ZWN0b3JpZWxsZS1j/aGFtcHMtdmlkZXNf/MTI4NC02NjE2My5q/cGc_c2VtdD1haXNf/aHlicmlkJnc9NzQw/JnE9ODA" alt='logo'>
+				<h4 class='h4-enjoy-tuto'>Profitez</h4>
+				<p class='text-enjoy-tuto'>Confirmez votre réservation et profitez</p>
+			</div>
+		</div>
+		<p class='p-tutos-section' style='color : white'>Lorem Ipsum is simply dummy text...</p>
+	</section>
+
+	<!-- ABOUT US SECTION -->
+	<section class='about-us-container'>
+		<h2 class='h2-about-us-container' style='text-align : center'>About Us or About me...</h2>
+		<p class='p-about-us-container' style='text-align : center'>Who are or who is the genius behind CineBook</p>
+		<div class="container">
+			<div class="row align-items-center">
+				<div class="col-lg-6 mb-5 mb-lg-0">
+					<div id="servicesCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="3500">
+						<div class="carousel-indicators">
+							<button type="button" data-bs-target="#servicesCarousel" data-bs-slide-to="0" class="active" aria-label="Nettoyage"></button>
+							<button type="button" data-bs-target="#servicesCarousel" data-bs-slide-to="1" aria-label="Lavage de voiture"></button>
+							<button type="button" data-bs-target="#servicesCarousel" data-bs-slide-to="2" aria-label="Promenade de chien"></button>
+							<button type="button" data-bs-target="#servicesCarousel" data-bs-slide-to="3" aria-label="Livraison de courses"></button>
+						</div>
+						<div class="carousel-inner rounded-4 shadow" style="height: 420px;">
+							<div class="carousel-item active" style="height: 100%;">
+								<img src="https://img.magnific.com/photos-gratuite/mains-tenant-outils-solutions-nettoyage_53876-148192.jpg?semt=ais_hybrid&w=740&q=80" alt="Service de ménage professionnel" class="d-block w-100 h-100" style="object-fit: cover;">
+								<div class="carousel-caption d-flex flex-column justify-content-end align-items-center h-100 pb-4">
+									<span class="badge px-3 py-2 text-uppercase mb-2" style="background-color: #e94560;">Ménage & Propreté</span>
+								</div>
+							</div>
+							<div class="carousel-item" style="height: 100%;">
+								<img src="https://lavageauto.fr/wp-content/uploads/2025/10/car-wash-homme-68eb959902e80-768x512.webp" alt="Lavage de voiture à domicile" class="d-block w-100 h-100" style="object-fit: cover;">
+								<div class="carousel-caption d-flex flex-column justify-content-end align-items-center h-100 pb-4">
+									<span class="badge px-3 py-2 text-uppercase mb-2" style="background-color: #e94560;">Lavage Auto</span>
+								</div>
+							</div>
+							<div class="carousel-item" style="height: 100%;">
+								<img src="https://static.vecteezy.com/ti/vecteur-libre/p1/7633500-personnage-de-promeneur-de-chien-vectoriel.jpg" alt="Promenade de chiens en extérieur" class="d-block w-100 h-100" style="object-fit: cover;">
+								<div class="carousel-caption d-flex flex-column justify-content-end align-items-center h-100 pb-4">
+									<span class="badge px-3 py-2 text-uppercase mb-2" style="background-color: #e94560;">Garde & Promenade</span>
+								</div>
+							</div>
+							<div class="carousel-item" style="height: 100%;">
+								<img src="https://s.lorientlejour.com/storage/attachments/1422/321442_268589.jpeg/r/1200/321442_268589.jpeg" alt="Livraison de courses à domicile" class="d-block w-100 h-100" style="object-fit: cover;">
+								<div class="carousel-caption d-flex flex-column justify-content-end align-items-center h-100 pb-4">
+									<span class="badge px-3 py-2 text-uppercase mb-2" style="background-color: #e94560;">Livraison de Courses</span>
+								</div>
+							</div>
+						</div>
+						<button class="carousel-control-prev" type="button" data-bs-target="#servicesCarousel" data-bs-slide="prev">
+							<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+						</button>
+						<button class="carousel-control-next" type="button" data-bs-target="#servicesCarousel" data-bs-slide="next">
+							<span class="carousel-control-next-icon" aria-hidden="true"></span>
+						</button>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<p class="text-uppercase fw-bold" style="color: #e94560; letter-spacing: 1px;">What about me then</p>
+					<h2 class="fw-bold mb-4" style="color: #0A2540;">Me , me , me , me and me</h2>
+					<p class="text-muted">
+						Fondé avec la volonté de simplifier votre quotidien, QuickService est né d'un constat simple : il est parfois difficile de trouver un service de confiance pour prendre soin de son intérieur.
+						En tant que fondateur indépendant, j'ai conçu cette plateforme pour vous offrir une expérience fluide, rapide et transparente. 
+						Cliquez. Réservez. Souriez. Nous nous occupons du reste.
+					</p>
+					<a href="#" class="btn btn-outline-primary rounded-pill px-4 mt-3">En savoir plus</a>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- FOOTER -->
+	<footer class="footer" style='margin-top: 30px'>
+		<div class="footer-container">
+			<div class="footer-content">
+				<div class="footer-section">
+					<h3 class="footer-logo"><span class="footer-icon">🎬</span> CineBook</h3>
+					<p class="footer-description">Réservez vos places de cinéma en ligne. Découvrez les meilleurs films et profitez d'une expérience de réservation simple et rapide.</p>
+				</div>
+				<div class="footer-section">
+					<h4 class="footer-title">Liens rapides</h4>
+					<ul class="footer-list">
+						<li><a href="#">Accueil</a></li>
+						<li><a href="#">Films</a></li>
+						<li><a href="#">Mes réservations</a></li>
+						<li><a href="#">À propos</a></li>
+					</ul>
+				</div>
+				<div class="footer-section">
+					<h4 class="footer-title">Support</h4>
+					<ul class="footer-list">
+						<li><a href="#">Contact</a></li>
+						<li><a href="#">FAQ</a></li>
+						<li><a href="#">Aide</a></li>
+					</ul>
+				</div>
+				<div class="footer-section">
+					<h4 class="footer-title">Nous suivre</h4>
+					<div class="footer-social">
+						<a href="#" class="social-icon" title="Facebook">f</a>
+						<a href="#" class="social-icon" title="Instagram">📷</a>
+						<a href="#" class="social-icon" title="GitHub">⚙️</a>
+						<a href="#" class="social-icon" title="Discord">💬</a>
+					</div>
+					<p class="footer-social-text">GitHub • Instagram • Discord</p>
+				</div>
+			</div>
+			<div class="footer-divider"></div>
+			<div class="footer-bottom">
+				<p class="footer-copyright">&copy; 2024 CineBook. Tous droits réservés.</p>
+				<div class="footer-legal">
+					<a href="#">CGU</a>
+					<a href="#">Confidentialité</a>
+					<a href="#">Cookies</a>
+				</div>
+			</div>
+		</div>
+	</footer>
+
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src='{{ asset('js/home.js') }}'></script>
+{% endblock %}

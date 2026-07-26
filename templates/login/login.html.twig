@@ -1,0 +1,211 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion - CineBook{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel='stylesheet' href='{{ asset('css/login.css') }}'>
+{% endblock %}
+
+{% block body %}
+    <!-- NAVBAR -->
+   <nav class="navbar navbar-expand-lg bg-body-tertiary">
+		<div class="container-fluid">
+			<div class='navbar-logo-container'>
+				<a class="navbar-brand" href="{{ path("app_home") }}">
+					<img src='{{ asset('images/logo_monprojet-V2.png') }}' class='navbar-logo'>
+				</a>
+			</div>
+			<div class="collapse navbar-collapse" id="navbarNavDropdown">
+				<ul class="navbar-nav">
+					<li class="nav-item">
+						<a class="nav-link" href="{{ path('app_home') }}">Films</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+    <!-- CONTENU PRINCIPAL -->
+    <div class="login-container">
+        <div class="login-content">
+            
+            <!-- COLONNE GAUCHE - MESSAGE -->
+            <div class="login-left">
+                <div style="font-size: 80px; text-align: center; margin-bottom: 24px;">🎬</div>
+                <h1 class="login-title">Bienvenue sur CineBook</h1>
+                <p class="login-subtitle">
+                    Connectez-vous à votre compte pour réserver vos places de cinéma et gérer vos réservations.
+                </p>
+                
+                <div class="login-features">
+                    <div class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <div>
+                            <p class="feature-title">Accès sécurisé</p>
+                            <p class="feature-text">Vos données sont protégées</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <div>
+                            <p class="feature-title">Gestion simple</p>
+                            <p class="feature-text">Consultez vos réservations</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <div>
+                            <p class="feature-title">Réservations rapides</p>
+                            <p class="feature-text">Processus optimisé</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COLONNE DROITE - FORMULAIRE -->
+            <div class="login-right">
+                <div class="login-form-card">
+                    <h2 class="form-title">Se connecter</h2>
+                    <p class="form-subtitle">Accédez à votre compte CineBook</p>
+
+                    <!-- Message si utilisateur déjà connecté -->
+                    {% if app.user %}
+                        <div class="alert alert-info">
+                            <span class="alert-icon">ℹ️</span>
+                            Vous êtes connecté en tant que {{ app.user.userIdentifier }}
+                            <a href="{{ logout_path() }}" class="alert-logout">Se déconnecter</a>
+                        </div>
+                    {% endif %}
+
+                    <!-- Erreurs de connexion -->
+                    {% if error %}
+                        <div class="alert alert-error">
+                            <span class="alert-icon">⚠️</span>
+                            {{ error.messageKey|trans(error.messageData, 'security') }}
+                        </div>
+                    {% endif %}
+
+                    <!-- FORMULAIRE -->
+                    <form method="post" class="login-form">
+                        <!-- Email -->
+                        <div class="form-group">
+                            <label for="username" class="form-label">Adresse email</label>
+                            <input 
+                                type="email" 
+                                value="{{ last_username }}" 
+                                name="_username" 
+                                id="username" 
+                                class="form-input"
+                                placeholder="vous@example.com"
+                                autocomplete="email" 
+                                required 
+                                autofocus
+                            >
+                        </div>
+
+                        <!-- Mot de passe -->
+                        <div class="form-group">
+                            <label for="password" class="form-label">Mot de passe</label>
+                            <input 
+                                type="password" 
+                                name="_password" 
+                                id="password" 
+                                class="form-input"
+                                placeholder="Entrez votre mot de passe"
+                                autocomplete="current-password" 
+                                required
+                            >
+                        </div>
+
+                        <!-- Mot de passe oublié -->
+                        <div class="form-forgot-password">
+                            <a href="#">Mot de passe oublié ?</a>
+                        </div>
+
+                        <!-- Token CSRF -->
+                        <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
+
+                        <!-- Optionnel: Se souvenir de moi -->
+                        {#
+                        <div class="form-checkbox">
+                            <input type="checkbox" name="_remember_me" id="_remember_me" class="checkbox-input">
+                            <label for="_remember_me" class="checkbox-label">Se souvenir de moi</label>
+                        </div>
+                        #}
+
+                        <!-- Bouton connexion -->
+                        <button type="submit" class="btn btn-login">Se connecter</button>
+                    </form>
+
+                    <!-- Lien vers inscription -->
+                    <div class="login-register-link">
+                        <p>
+                            Pas encore de compte ? 
+                            <a href="{{ path('app_register') }}">S'inscrire</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 class="footer-logo">
+                        <span class="footer-icon">🎬</span>
+                        CineBook
+                    </h3>
+                    <p class="footer-description">
+                        Réservez vos places de cinéma en ligne. Découvrez les meilleurs films et profitez d'une expérience de réservation simple et rapide.
+                    </p>
+                </div>
+
+                <div class="footer-section">
+                    <h4 class="footer-title">Liens rapides</h4>
+                    <ul class="footer-list">
+                        <li><a href="{{ path('app_home') }}">Accueil</a></li>
+                        <li><a href="#">Films</a></li>
+                        <li><a href="#">À propos</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4 class="footer-title">Support</h4>
+                    <ul class="footer-list">
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Aide</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4 class="footer-title">Nous suivre</h4>
+                    <div class="footer-social">
+                        <a href="#" class="social-icon" title="Facebook">f</a>
+                        <a href="#" class="social-icon" title="Instagram">📷</a>
+                        <a href="#" class="social-icon" title="GitHub">⚙️</a>
+                        <a href="#" class="social-icon" title="Discord">💬</a>
+                    </div>
+                    <p class="footer-social-text">GitHub • Instagram • Discord</p>
+                </div>
+            </div>
+
+            <div class="footer-divider"></div>
+
+            <div class="footer-bottom">
+                <p class="footer-copyright">
+                    &copy; 2024 CineBook. Tous droits réservés.
+                </p>
+                <div class="footer-legal">
+                    <a href="#">CGU</a>
+                    <a href="#">Confidentialité</a>
+                    <a href="#">Cookies</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+{% endblock %}
